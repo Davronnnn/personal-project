@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import bgImage from '../assets/404-page.webp';
+import bgImage from '../assets/images/404-page.webp';
 
 const NotFound = () => {
 	return (
@@ -7,7 +7,7 @@ const NotFound = () => {
 			<Image
 				src={bgImage}
 				alt='404 background image'
-				className='absolute h-full w-full object-cover'
+				className='absolute h-full w-full object-cover w-100 h-100'
 			/>
 			<div className='inset-0 bg-black opacity-25 absolute'> </div>
 
