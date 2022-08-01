@@ -1,38 +1,48 @@
+import type { NextPage } from 'next';
+
 import { InferGetStaticPropsType } from 'next';
 import Image from 'next/image';
 import { useState } from 'react';
 
 import LoginImg from '../assets/images/login.webp';
 
-interface IPost {
-	userId: number;
-	id: number;
-	title: string;
-	body: string;
+interface IUser {
+	_id: string;
+	name: string;
+	image: string;
+	email: string;
+	places: string[];
 }
-const API_URL: string = 'https://jsonplaceholder.typicode.com/posts';
 
-const Login = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
-	const [postList, setPostList] = useState(posts);
+interface IUsers {
+	users: IUser[];
+}
 
-	if (!postList) return <h1>Loading...</h1>;
+const API_URL: string = 'https://shared-app-mern.herokuapp.com/api/users';
 
-	const addPost = async (e: React.FormEvent, formData: IPost) => {
-		e.preventDefault();
-		const post: IPost = {
-			userId: 1,
-			id: Math.random(),
-			title: formData.title,
-			body: formData.body,
-		};
-		setPostList([post, ...postList]);
-	};
+const Login = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
+	const [userList, setUserList] = useState(props.users);
+	console.log(props);
+	if (!userList) return <h1>There is no any user...</h1>;
 
-	const deletePost = async (id: number) => {
-		const posts: IPost[] = postList.filter((post: IPost) => post.id !== id);
-		console.log(posts);
-		setPostList(posts);
-	};
+	// const addPost = async (e: React.FormEvent, formData: IUser) => {
+	// 	e.preventDefault();
+	// 	const post: IUser = {
+	// 		userId: 1,
+	// 		id: Math.random(),
+	// 		title: formData.title,
+	// 		body: formData.body,
+	// 	};
+	// 	setUserList([post, ...userList]);
+	// };
+
+	// const deletePost = async (id: string) => {
+	// 	const posts: IUser[] = userList.filter(
+	// 		(user: IUser) => user._id !== id
+	// 	);
+	// 	console.log(posts);
+	// 	setUserList(posts);
+	// };
 
 	return (
 		<main>
@@ -110,14 +120,14 @@ const Login = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
 									<div
 										className='lg:w-6/12 flex items-center lg:rounded-r-lg rounded-b-lg lg:rounded-bl-none'
 										style={{
-											background:
-												'linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593)',
+											background: 'white',
+											color: '#000',
 										}}>
-										<div className='text-white px-4 py-6 md:p-12 md:mx-6'>
+										<div className='text-dark px-4 py-6 md:p-12 md:mx-6'>
 											<h4 className='text-xl font-semibold mb-6'>
 												We are more than just a company
 											</h4>
-											<p className='text-sm'>
+											{/* <p className='text-sm'>
 												Lorem ipsum dolor sit amet,
 												consectetur adipisicing elit,
 												sed do eiusmod tempor incididunt
@@ -126,7 +136,19 @@ const Login = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
 												quis nostrud exercitation
 												ullamco laboris nisi ut aliquip
 												ex ea commodo consequat.
-											</p>
+											</p> */}
+											{/* {userList.users.map((user) => {
+												return (
+													<div key={user._id}>
+														<h4 className='text-xl font-semibold mb-6'>
+															{user.name}
+														</h4>
+														<p className='text-sm'>
+															{user.email}
+														</p>
+													</div>
+												);
+											})} */}
 										</div>
 									</div>
 								</div>
@@ -141,11 +163,12 @@ const Login = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export async function getStaticProps() {
 	const res = await fetch(API_URL);
-	const posts: IPost[] = await res.json();
+	const users: IUsers = await res.json();
+	console.log(users);
 
 	return {
 		props: {
-			posts,
+			users,
 		},
 	};
 }
